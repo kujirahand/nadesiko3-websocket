@@ -1,0 +1,18 @@
+{
+  "name": "nadesiko3-websocket",
+  "version": "0.0.1",
+  "description": "WebSocket for Nadesiko3 plugin",
+  "main": "plugin_websocket.js",
+  "scripts": {
+    "test": "mocha"
+  },
+  "keywords": ["nadesiko3"],
+  "author": "kujirahand",
+  "license": "MIT License",
+  "devDependencies": {
+    "mocha": "^4.1.0"
+  },
+  "dependencies": {
+    "ws": "^6.1.2"
+  }
+}
