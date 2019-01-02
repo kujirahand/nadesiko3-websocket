@@ -1,6 +1,5 @@
-# nadesiko3-hoge
-hoge plugin for nadesiko3
-
-This is sample plugin for nadesiko3.
+# nadesiko3-websocket
+WebSocket Server plugin for nadesiko3
 
 - [URL] https://github.com/kujirahand/nadesiko3/
+
