@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html><meta charset="UTF-8"><body>
+
+<h1>チャットテスト</h1>
+<div>
+  以下にメッセージを記入:<br>
+  <input type="text" id="msg" value="テスト。">
+  <button id="sendButton">送信</button><br>
+  <textarea id="logs" rows="10" cols="40"></textarea>
+</div>
+
+<script type="text/javascript"
+ src="https://cdn.jsdelivr.net/npm/nadesiko3@3.0.70/release/wnako3.js?run"></script>
+
+<script type="なでしこ">
+WS受信時には
+　「#logs」のテキスト取得して、Lに代入。
+　　L=対象＆改行＆L。
+　　「#logs」へLをテキスト設定。
+ここまで
+「ws://localhost:5001」へWS接続
+
+「#sendButton」をクリックした時には
+　　MSG=「#msg」のテキスト取得。
+　　「{今}> {MSG}」をWS送信。
+ここまで。
+</script>
+</body></html>
+
+
