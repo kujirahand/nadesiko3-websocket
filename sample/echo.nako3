@@ -1,4 +1,4 @@
-!「../../src/plugin_websocket.js」を取り込む。
+!「../plugin_websocket.js」を取り込む。
 #--- 設定 ---
 PORT=5001
 
