@@ -1,0 +1,48 @@
+!「../../plugin_websocket.js」を取り込む。
+!「plugin_express.js」を取り込む。
+#--- 設定 ---
+WS_PORT=5001
+WEB_PORT=8888
+
+#--- WSイベントの指定 ---
+WSサーバ起動成功した時には
+  「● WebSocketサーバ(CHATサーバ)を起動しました」と表示。
+  自分IPアドレス取得して反復
+    「- wss://{対象}:{WS_PORT}」を表示。
+  ここまで
+ここまで
+WSサーバ起動失敗した時には
+  「WebSocketサーバの起動に失敗しました」と表示。
+ここまで
+WSサーバ接続した時には
+  IP=対象["connection"]["remoteAddress"]
+  「クライアント{IP}が接続しました」と表示。
+ここまで
+WSサーバ受信時には
+  「受信:{対象}」と表示。
+  対象をWSサーバ全送信。
+ここまで
+#--- WebSocketを起動 ---
+{
+  port:WS_PORT,
+  cert: 母艦パス&「/ca.crt」,
+  key: 母艦パス&「/ca.key」,
+}でWSSサーバ起動。
+
+
+#--- WEBイベント ----
+// TODO: WEBサーバーもHTTPS化する
+WEB_PORTでWEBサーバ起動した時には
+　「下記のアドレスにWEBブラウザでアクセスしてください。」と表示。
+  自分IPアドレス取得して反復
+    「- http://{対象}:{WEB_PORT}」を表示。
+  ここまで
+  「/」へWEBサーバGETした時には
+  　「wss-client.html」を開いて、Sに代入。
+    SをWEBサーバ出力。
+  ここまで。
+ここまで。
+
+
+
+
