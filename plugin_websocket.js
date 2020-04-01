@@ -3,6 +3,8 @@
  * WebSocketのためのプラグイン (wsをラップしたもの)
  */
 const WebSocket = require('ws').Server
+const https = require('https')
+const fs = require('fs')
 
 let app = null
 
@@ -14,40 +16,74 @@ const PluginWebsocket = {
     type: 'func',
     josi: [],
     fn: function (sys) {
+      // イベント変数を初期化
       sys.__v0['WSサーバ:ONSUCCESS'] = null
       sys.__v0['WSサーバ:ONERROR'] = null
       sys.__v0['WSサーバ:ONMESSAGE'] = null
       sys.__v0['WSサーバ:ONCONNECTION'] = null
+      // サーバーのイベントを設定
+      sys.__ws_setEvent = (app, sys) => {
+        app.on('connection', (ws, req) => {
+          const cbCon = sys.__v0['WSサーバ:ONCONNECTION']
+          if (cbCon) {
+            sys.__v0['対象'] = req
+            cbCon(sys)
+          }
+          ws.on('message', (msg) => {
+            const cbMsg = sys.__v0['WSサーバ:ONMESSAGE']
+            sys.__v0['対象'] = msg
+            if (cbMsg) cbMsg(sys)
+          })
+        })
+        app.on('close', (e) => {
+          console.log('ws::close', e)
+        })
+        app.on('error', (e) => {
+          const callback = sys.__v0['WSサーバ:ONERROR']
+          if (callback) callback(e, sys)
+        })
+        // サーバの成功時
+        const callback = sys.__v0['WSサーバ:ONSUCCESS']
+        if (callback) callback(sys)
+      }
     }
   },
   // @WebSocketサーバ
-  'WSサーバ起動': { // @ポートPORTNOでWebサーバを起動して成功したら『WSサーバ起動成功した時』を実行する // @WSさーばきどう
+  'WSサーバ起動': { // @ポートPORTNOでサーバを起動して成功したら『WSサーバ起動成功した時』を実行する // @WSさーばきどう
     type: 'func',
     josi: [['の', 'で']],
     fn: function (portno, sys) {
-      app = new WebSocket({port: portno})
-      app.on('connection', (ws, req) => {
-        const cbCon = sys.__v0['WSサーバ:ONCONNECTION']
-        if (cbCon) {
-          sys.__v0['対象'] = req
-          cbCon(sys)
-        }
-        ws.on('message', (msg) => {
-          const cbMsg = sys.__v0['WSサーバ:ONMESSAGE']
-          sys.__v0['対象'] = msg
-          if (cbMsg) cbMsg(sys)
+      app = new WebSocket({port: portno}) // WSを起動
+      sys.__ws_setEvent(app, sys) // イベントを設定
+      return app
+    }
+  },
+  'WSSサーバ起動': { // @設定CONF{cert:サーバ証明書,key:キーファイル,port:ポート番号}を指定してWSSサーバを起動して成功したら『WSサーバ起動成功した時』を実行する // @WSSさーばきどう
+    type: 'func',
+    josi: [['の', 'で']],
+    fn: function (conf, sys) {
+      // @see https://www.npmjs.com/package/ws#external-https-server
+      // サーバー証明書など読み取り
+      try {
+        certBody = fs.readFileSync(conf.cert) // サーバ証明書
+        keyBody = fs.readFileSync(conf.key) // キーファイル 
+      } catch (e) {
+        throw new Error('『WSSサーバ起動』でサーバ証明書ファイルが読み込めません。' + e.message)
+      }
+      // HTTPSサーバーの起動
+      let web
+      try {
+        web = https.createServer({
+          cert: certBody,
+          key: keyBody
         })
-      })
-      app.on('close', (e) => {
-        console.log('ws::close', e)
-      })
-      app.on('error', (e) => {
-        const callback = sys.__v0['WSサーバ:ONERROR']
-        if (callback) callback(e, sys)
-      })
-      // サーバの成功時
-      const callback = sys.__v0['WSサーバ:ONSUCCESS']
-      if (callback) callback(sys)
+      } catch (e) {
+        throw new Error('『WSSサーバ起動』でHTTPSサーバが起動できません。証明書ファイルが間違っている可能性があります。ファイルを確認してください。' + e.message)
+      }
+      // WSSを起動
+      app = new WebSocket({server: web})
+      web.listen(conf.port)
+      sys.__ws_setEvent(app, sys) // イベントを設定
       return app
     }
   },
