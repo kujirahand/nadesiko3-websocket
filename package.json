@@ -1,6 +1,6 @@
 {
   "name": "nadesiko3-websocket",
-  "version": "0.0.2",
+  "version": "0.0.3",
   "description": "WebSocket for Nadesiko3 plugin",
   "main": "plugin_websocket.js",
   "scripts": {
