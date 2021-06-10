@@ -1,8 +1,8 @@
 {
   "name": "nadesiko3-websocket",
-  "version": "0.0.3",
+  "version": "0.0.4",
   "description": "WebSocket for Nadesiko3 plugin",
-  "main": "plugin_websocket.js",
+  "main": "nadesiko3-websocket.js",
   "scripts": {
     "test": "mocha"
   },
@@ -12,9 +12,9 @@
   "author": "kujirahand",
   "license": "MIT License",
   "devDependencies": {
-    "mocha": "^4.1.0"
+    "nadesiko3": "^3.2.14"
   },
   "dependencies": {
-    "ws": "^7.2.3"
+    "ws": "^7.4.6"
   }
 }

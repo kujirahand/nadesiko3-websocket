@@ -1,4 +1,4 @@
-!「../../plugin_websocket.js」を取り込む。
+!「../../nadesiko3-websocket.js」を取り込む。
 !「plugin_express.js」を取り込む。
 #--- 設定 ---
 WS_PORT=5001
@@ -25,8 +25,8 @@ WSサーバ受信時には
 #--- WebSocketを起動 ---
 {
   port:WS_PORT,
-  cert: 母艦パス&「/ca.crt」,
-  key: 母艦パス&「/ca.key」,
+  cert: 母艦パス&「/server.crt」,
+  key: 母艦パス&「/server.key」,
 }でWSSサーバ起動。
 
 

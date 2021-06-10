@@ -1,4 +1,4 @@
-!「../../plugin_websocket.js」を取り込む。
+!「../../nadesiko3-websocket.js」を取り込む。
 !「plugin_express.js」を取り込む。
 #--- 設定 ---
 WS_PORT=5001
