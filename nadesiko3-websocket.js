@@ -12,7 +12,7 @@ let app = null
 const ERROR_NO_INIT = '先に『WSサーバ起動』命令を実行してください。'
 
 const PluginWebsocket = {
-  '初期化': {
+    '初期化': {
     type: 'func',
     josi: [],
     fn: function (sys) {
@@ -27,11 +27,16 @@ const PluginWebsocket = {
           const cbCon = sys.__v0['WSサーバ:ONCONNECTION']
           if (cbCon) {
             sys.__v0['対象'] = req
+            sys.__ws = ws;
             cbCon(sys)
           }
           ws.on('message', (msg) => {
             const cbMsg = sys.__v0['WSサーバ:ONMESSAGE']
             sys.__v0['対象'] = msg
+            sys.__v0['WSサーバ相手'] = ws._socket._peername.address + ':' + ws._socket._peername.port
+            sys.__ws = ws;
+            // console.log(Object.keys(ws._socket));
+            // console.log(ws._socket._peername);
             if (cbMsg) cbMsg(sys)
           })
         })
@@ -62,7 +67,7 @@ const PluginWebsocket = {
     type: 'func',
     josi: [['の', 'で']],
     fn: function (conf, sys) {
-      // see https://www.npmjs.com/package/ws#external-https-server
+      // @see https://www.npmjs.com/package/ws#external-https-server
       // サーバー証明書など読み取り
       try {
         certBody = fs.readFileSync(conf.cert) // サーバ証明書
@@ -111,7 +116,7 @@ const PluginWebsocket = {
     },
     return_none: true
   },
-  'WSサーバ受信時': { // @WSサーバでメッセージを受信した時に実行される。受信データは『対象』に代入される // @WSさーばじゅしんしたとき
+  'WSサーバ受信時': { // @WSサーバでメッセージを受信した時に実行される。クライアントのIPアドレスとポートは『WSサーバー相手』に受信データは『対象』に代入される // @WSさーばじゅしんしたとき
     type: 'func',
     josi: [['で']],
     fn: function (callback, sys) {
@@ -127,6 +132,16 @@ const PluginWebsocket = {
       app.clients.forEach((client) => {
         client.send(s)
       })
+    },
+    return_none: true
+  },
+  'WSサーバ相手': {type: 'const', value: ''}, // @WSさーばあいて
+  'WSサーバ個別送信': { // @WSサーバで個別にメッセージSを送信する // @WSさーばこべつそうしん
+    type: 'func',
+    josi: [['を']],
+    fn: function (s, sys) {
+      if (!app) throw new Error(ERROR_NO_INIT)
+     sys.__ws.send(s)
     },
     return_none: true
   },
