@@ -67,7 +67,7 @@ const PluginWebsocket = {
     type: 'func',
     josi: [['の', 'で']],
     fn: function (conf, sys) {
-      // @see https://www.npmjs.com/package/ws#external-https-server
+      // (ref) https://www.npmjs.com/package/ws#external-https-server
       // サーバー証明書など読み取り
       try {
         certBody = fs.readFileSync(conf.cert) // サーバ証明書
