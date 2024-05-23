@@ -1,19 +1,18 @@
 {
   "name": "nadesiko3-websocket",
-  "version": "0.0.5",
+  "version": "3.6.5",
   "description": "WebSocket for Nadesiko3 plugin",
   "main": "nadesiko3-websocket.js",
   "scripts": {
-    "test": "mocha"
+    "test": "mocha",
+    "echo": "cnako3 sample/echo.nako3",
+    "chat": "cnako3 sample/chat/chat-server.nako3"
   },
   "keywords": [
     "nadesiko3"
   ],
   "author": "kujirahand",
   "license": "MIT License",
-  "devDependencies": {
-    "nadesiko3": "^3.2.14"
-  },
   "dependencies": {
     "ws": "^7.4.6"
   }

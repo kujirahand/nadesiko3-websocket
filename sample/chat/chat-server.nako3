@@ -1,5 +1,5 @@
 !「../../nadesiko3-websocket.js」を取り込む。
-!「plugin_express.js」を取り込む。
+!「nadesiko3-server」を取り込む。
 #--- 設定 ---
 WS_PORT=5001
 WEB_PORT=8888
@@ -33,7 +33,7 @@ WEB_PORTでWEBサーバ起動した時には
     「- http://{対象}:{WEB_PORT}」を表示。
   ここまで
   「/」へWEBサーバGETした時には
-  　「chat-client.html」を開いて、Sに代入。
+  　「{母艦パス}/chat-client.html」を開いて、Sに代入。
     SをWEBサーバ出力。
   ここまで。
 ここまで。

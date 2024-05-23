@@ -12,28 +12,38 @@ let app = null
 const ERROR_NO_INIT = '先に『WSサーバ起動』命令を実行してください。'
 
 const PluginWebsocket = {
+  'meta': {
+    type: 'const',
+    value: {
+      pluginName: 'nadesiko3-websocket', // プラグインの名前
+      description: 'WebSocketサーバープラグイン', // 説明
+      pluginVersion: '3.6.5', // プラグインのバージョン
+      nakoRuntime: ['cnako3'], // 対象ランタイム
+      nakoVersion: '3.6.5' // 要求なでしこバージョン
+    }
+  },
     '初期化': {
     type: 'func',
     josi: [],
     fn: function (sys) {
       // イベント変数を初期化
-      sys.__v0['WSサーバ:ONSUCCESS'] = null
-      sys.__v0['WSサーバ:ONERROR'] = null
-      sys.__v0['WSサーバ:ONMESSAGE'] = null
-      sys.__v0['WSサーバ:ONCONNECTION'] = null
+      sys.__setSysVar('WSサーバ:ONSUCCESS', null)
+      sys.__setSysVar('WSサーバ:ONERROR', null)
+      sys.__setSysVar('WSサーバ:ONMESSAGE', null)
+      sys.__setSysVar('WSサーバ:ONCONNECTION', null)
       // サーバーのイベントを設定
       sys.__ws_setEvent = (app, sys) => {
         app.on('connection', (ws, req) => {
-          const cbCon = sys.__v0['WSサーバ:ONCONNECTION']
+          const cbCon = sys.__getSysVar('WSサーバ:ONCONNECTION')
           if (cbCon) {
-            sys.__v0['対象'] = req
+            sys.__setSysVar('対象', req)
             sys.__ws = ws;
             cbCon(sys)
           }
           ws.on('message', (msg) => {
-            const cbMsg = sys.__v0['WSサーバ:ONMESSAGE']
-            sys.__v0['対象'] = msg
-            sys.__v0['WSサーバ相手'] = ws._socket._peername.address + ':' + ws._socket._peername.port
+            const cbMsg = sys.__getSysVar('WSサーバ:ONMESSAGE')
+            sys.__setSysVar('対象', msg)
+            sys.__setSysVar('WSサーバ相手', ws._socket._peername.address + ':' + ws._socket._peername.port)
             sys.__ws = ws;
             // console.log(Object.keys(ws._socket));
             // console.log(ws._socket._peername);
@@ -44,11 +54,11 @@ const PluginWebsocket = {
           console.log('ws::close', e)
         })
         app.on('error', (e) => {
-          const callback = sys.__v0['WSサーバ:ONERROR']
+          const callback = sys.__getSysVar('WSサーバ:ONERROR')
           if (callback) callback(e, sys)
         })
         // サーバの成功時
-        const callback = sys.__v0['WSサーバ:ONSUCCESS']
+        const callback = sys.__getSysVar('WSサーバ:ONSUCCESS')
         if (callback) callback(sys)
       }
     }
@@ -96,7 +106,7 @@ const PluginWebsocket = {
     type: 'func',
     josi: [['を']],
     fn: function (callback, sys) {
-      sys.__v0['WSサーバ:ONSUCCESS'] = callback
+      sys.__setSysVar('WSサーバ:ONSUCCESS', callback)
     },
     return_none: true
   },
@@ -104,7 +114,7 @@ const PluginWebsocket = {
     type: 'func',
     josi: [['を']],
     fn: function (callback, sys) {
-      sys.__v0['WSサーバ:ONERROR'] = callback
+      sys.__setSysVar('WSサーバ:ONERROR', callback)
     },
     return_none: true
   },
@@ -112,7 +122,7 @@ const PluginWebsocket = {
     type: 'func',
     josi: [['を']],
     fn: function (callback, sys) {
-      sys.__v0['WSサーバ:ONCONNECTION'] = callback
+      sys.__setSysVar('WSサーバ:ONCONNECTION', callback)
     },
     return_none: true
   },
@@ -120,7 +130,7 @@ const PluginWebsocket = {
     type: 'func',
     josi: [['で']],
     fn: function (callback, sys) {
-      sys.__v0['WSサーバ:ONMESSAGE'] = callback
+      sys.__setSysVar('WSサーバ:ONMESSAGE', callback)
     },
     return_none: true
   },
